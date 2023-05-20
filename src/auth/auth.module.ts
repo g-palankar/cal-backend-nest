@@ -1,10 +1,21 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtStrategyService } from './jwt-strategy.service';
-import { PassportModule } from '@nestjs/passport';
+import { AuthProviderConfig } from './interface/auth-provider-config.interface';
+import { JwtVerificationService } from './jwt-verification.service';
+import { AuthGuard } from './auth.guard';
 
 @Module({
-  imports: [PassportModule, PassportModule.register({ defaultStrategy: 'jwt' })],
-  providers: [AuthService, JwtStrategyService]
+  providers: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule {
+  static forRoot(authProviderConfigs: AuthProviderConfig[]): DynamicModule {
+    return {
+      module: AuthModule,
+      providers: [
+        { provide: JwtVerificationService, useValue: new JwtVerificationService(authProviderConfigs) },
+        AuthGuard
+      ],
+      exports: [AuthGuard, JwtVerificationService],
+    }
+  }
+}
