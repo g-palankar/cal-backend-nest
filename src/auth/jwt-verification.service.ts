@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AuthProviderConfig } from './interface/auth-provider-config.interface';
+import { AuthProviderConfig } from '../app-config/interface/auth-provider-config.interface';
 import { JwtVerifier } from './interface/jwt-verifier.interface';
 import { OidcJwtVerifier } from './oidc-jwt-verifier';
 import { Request } from 'express';
